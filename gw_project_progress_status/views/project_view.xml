@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Project Stages -->
+    <record id="task_type_tree_gw_inherit" model="ir.ui.view">
+        <field name="name">project.task.type.tree.gw.inherit</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_tree"/>
+        <field name="arch" type="xml">
+            <field name="project_ids" position="after">
+                <field name="stage_progress"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="task_type_edit_gw_inherit" model="ir.ui.view">
+        <field name="name">project.task.type.form.gw.inherit</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_edit"/>
+        <field name="arch" type="xml">
+            <field name="fold" position="after">
+                <field name="stage_progress"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Task -->
+    <record id="view_task_form2_gw_inherited" model="ir.ui.view">
+        <field name="name">project.task.form.gw.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="stage_progress"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_task_tree2_gw_inherited" model="ir.ui.view">
+        <field name="name">project.task.tree.gw.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+            <field name="user_ids" position="after">
+                <field name="stage_progress" widget="progressbar" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_task_kanban_gw_inherited">
+        <field name="name">project.task.kanban.gw.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+            <field name="is_private" position="after">
+                <field name="stage_progress" invisible="1"/>
+            </field>
+            <xpath expr="//div[hasclass('o_kanban_record_body')]//div[@name='date_deadline']" position="after">
+                <div t-if="record.stage_progress.value != 0.0">
+                    <field name="stage_progress" widget="progressbar"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Project -->
+    <record id="view_project_gw_inherited" model="ir.ui.view">
+        <field name="name">project.project.tree.gw.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="after">
+                <field name="project_progress" widget="progressbar" optional="show"/>
+            </field>
+        </field>
+    </record>
+    
+    <record id="edit_project_gw_inherited" model="ir.ui.view">
+        <field name="name">project.project.form.gw.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="project_progress" widget="progressbar"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_project_kanban_gw_inherited">
+        <field name="name">project.project.kanban.gw.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="after">
+                <field name="project_progress" invisible="1"/>
+            </field>
+            <xpath expr="//div[hasclass('o_kanban_card_content')]//div[hasclass('o_kanban_primary_left')]//div[hasclass('o_primary')]" position="inside">
+                <t t-if="record.project_progress.value &gt; 0.0">
+                    <field name="project_progress" widget="progressbar"/>
+                </t>
+            </xpath>
+        </field>
+    </record>
+</odoo>
